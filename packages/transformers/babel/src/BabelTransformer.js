@@ -32,6 +32,7 @@ export default (new Transformer({
             additionalPlugins: asset.meta.babelPlugins,
             tracer,
           });
+          asset.meta.babelPlugins = null;
         } else {
           await babel7({
             asset,
