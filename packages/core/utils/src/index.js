@@ -53,7 +53,7 @@ export {
   isGlob,
   isGlobMatch,
   globMatch,
-  globSync,
+  // globSync,
   glob,
   globToRegex,
 } from './glob';
