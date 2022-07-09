@@ -4,7 +4,7 @@ import type {Readable} from 'stream';
 import type {FileSystem} from '@parcel/fs';
 
 import {objectSortedEntriesDeep} from './collection';
-import {hashString, Hash} from '@parcel/hash';
+import {hashBuffer, hashString, Hash} from '@parcel/hash';
 
 export function hashStream(stream: Readable): Promise<string> {
   let hash = new Hash();
@@ -32,7 +32,10 @@ export function hashObject(obj: {+[string]: mixed, ...}): string {
 let testCache: {|[string]: Promise<string>|} = {
   /*:: ...null */
 };
-export function hashFile(fs: FileSystem, filePath: string): Promise<string> {
+export async function hashFile(
+  fs: FileSystem,
+  filePath: string,
+): Promise<string> {
   if (process.env.PARCEL_BUILD_ENV === 'test') {
     // Development builds of these native modules are especially big and slow to hash.
     if (
@@ -40,10 +43,10 @@ export function hashFile(fs: FileSystem, filePath: string): Promise<string> {
     ) {
       let cacheEntry = testCache[filePath];
       if (cacheEntry) return cacheEntry;
-      let v = hashStream(fs.createReadStream(filePath));
+      let v = fs.readFile(filePath).then(content => hashBuffer(content));
       testCache[filePath] = v;
       return v;
     }
   }
-  return hashStream(fs.createReadStream(filePath));
+  return hashBuffer(await fs.readFile(filePath));
 }
