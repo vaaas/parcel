@@ -58,7 +58,7 @@ export async function yarnInstall(
     let {report} = await run({
       dir,
       fs,
-      options: {},
+      options: {npmRegistryServer: 'registry.npmjs.org'},
       progress(v) {
         let {type, indent, data, displayName} = v;
         console.debug(
