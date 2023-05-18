@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // @flow
 
 const path = require('path');
